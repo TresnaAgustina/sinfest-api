@@ -19,7 +19,7 @@ class AdminLoginController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            //code...
+            
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation Error',
