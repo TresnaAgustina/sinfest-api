@@ -19,7 +19,25 @@ class AdminRegisterController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            //code...
+            $validated =  $this->validate($request, 
+            [
+                'username'=>'required|unique:admins|max:20',
+                'email'=>'required|email|unique:admins',
+                'password'=>'required|string|min:8|confirmed'
+            ]) ;
+
+            $validated['password'] = bcrypt($request->password);
+            Admin::create($validated);
+            
+            $admin = Admin::where('username', $request->username)->first();
+            $token = $admin->createToken(env('APP_KEY'))->plainTextToken;
+
+            return response()->json([
+                'token_acces' => $token,
+                'token_type' => 'Bearer',
+                'data' => $admin
+            ], 201);
+
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation Error',
