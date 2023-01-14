@@ -6,6 +6,8 @@ use Exception;
 use App\Models\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Resources\AdminResource;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AdminLoginController extends Controller
@@ -19,7 +21,6 @@ class AdminLoginController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            //code...
             $this->validate($request, [
                 'username' => 'required',
                 'password' => 'required'
@@ -27,21 +28,21 @@ class AdminLoginController extends Controller
 
             $admin = Admin::where('username', $request->username)->first();
 
-            if(!$admin || !hash::check(
+            if (!$admin || !Hash::check(
                 $request->password,
                 $admin->password
-            )){
+            )) {
                 throw ValidationException::withMessages([
-                 'username' => [" The credentials are incorrect"]
+                    'username' => ["The credentials are incorrect"]
                 ]);
-            };
+            }
 
-            $admin->token()->delete();
+            $admin->tokens()->delete();
             $token = $admin->createToken(env('APP_KEY'))->plainTextToken;
 
             return (new AdminResource($admin))->additional([
-                'token_type' => 'Bearer ',
-                'access_token' => $token
+                'token_type' => 'Bearer',
+                'access_token' => $token,
             ]);
 
         } catch (ValidationException $e) {
