@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Auth\Admin;
 
 use Exception;
 use App\Models\Admin;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\AdminResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
