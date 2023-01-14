@@ -20,6 +20,30 @@ class AdminLoginController extends Controller
     {
         try {
             //code...
+            $this->validate($request, [
+                'username' => 'required',
+                'password' => 'required'
+            ]);
+
+            $admin = Admin::where('username', $request->username)->first();
+
+            if(!$admin || !hash::check(
+                $request->password,
+                $admin->password
+            )){
+                throw ValidationException::withMessages([
+                 'username' => [" The credentials are incorrect"]
+                ]);
+            };
+
+            $admin->token()->delete();
+            $token = $admin->createToken(env('APP_KEY'))->plainTextToken;
+
+            return (new AdminResource($admin))->additional([
+                'token_type' => 'Bearer ',
+                'access_token' => $token
+            ]);
+
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation Error',
