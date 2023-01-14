@@ -22,6 +22,8 @@ class AdminSeeder extends Seeder
                 'email' => 'idc@instiki.ac.id',
                 'password' => bcrypt('developer!!'),
                 'roles' => 'engineer',
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'uuid' => Uuid::uuid4()->toString(),
@@ -29,6 +31,8 @@ class AdminSeeder extends Seeder
                 'email' => 'sinbun@instiki.ac.id',
                 'password' => bcrypt('sinbun!!'),
                 'roles' => 'wibu',
+                'created_at' => now(),
+                'updated_at' => now()
             ],
         ])->each(function ($admin) {
             DB::table('admins')->insert($admin);

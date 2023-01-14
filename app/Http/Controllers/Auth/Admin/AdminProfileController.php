@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth\Admin;
 use Exception;
 use App\Models\Admin;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AdminResource;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -19,7 +20,8 @@ class AdminProfileController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            //code...
+            $admin = $request->user();
+            return new AdminResource($admin);
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation Error',

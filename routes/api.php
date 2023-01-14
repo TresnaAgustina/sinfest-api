@@ -2,6 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\Admin\{
+    AdminLoginController,
+    AdminLogoutController,
+    AdminRegisterController,
+    AdminProfileController
+};
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +21,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    // Admin
+    Route::get('/admin-only/me', AdminProfileController::class);
+    Route::post('/admin-only/logout', AdminLogoutController::class);
 });
+
+Route::post('/admin-only/register', AdminRegisterController::class);
+Route::post('/admin-only/login', AdminLoginController::class);
