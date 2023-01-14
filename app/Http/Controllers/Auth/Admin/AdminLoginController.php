@@ -33,7 +33,7 @@ class AdminLoginController extends Controller
                 $admin->password
             )) {
                 throw ValidationException::withMessages([
-                    'username' => ["The credentials are incorrect"]
+                    'message' => ["The credentials are incorrect"]
                 ]);
             }
 
@@ -44,8 +44,6 @@ class AdminLoginController extends Controller
                 'token_type' => 'Bearer',
                 'access_token' => $token,
             ]);
-
-            
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation Error',
