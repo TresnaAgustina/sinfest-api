@@ -19,7 +19,6 @@ class CreateVisitorsTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone');
-            $table->boolean('isCheckIn')->default(false);
             $table->boolean('isBanned')->default(false);
             $table->rememberToken();
             $table->timestamps();

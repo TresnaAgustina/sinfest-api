@@ -22,6 +22,7 @@ class CreateTicketsTable extends Migration
             $table->string('unique_code')->unique();
             $table->boolean('isChekIn')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
