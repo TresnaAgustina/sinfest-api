@@ -18,7 +18,7 @@ class CreateAdminsTable extends Migration
             $table->string('username', 20)->unique();
             $table->string('email')->unique();
             $table->string('password')->min(8);
-            $table->enum('roles', ['engineer', 'wibu'])->default('wibu');
+            $table->enum('roles', ['engineer', 'admin'])->default('admin');
             $table->rememberToken();
             $table->timestamps();
         });

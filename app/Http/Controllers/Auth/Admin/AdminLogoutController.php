@@ -19,18 +19,20 @@ class AdminLogoutController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $admin=$request->user(); 
-            $admin->tokens()->where('tokenable_id',$admin->currentAccessToken()->tokenable_id)->delete(); 
-             
-            return response()->json([ 
-            'message'=>"You're Logout", 
-            ]);  
-            //code...
+            $admin = $request->user();
+            $admin->tokens()->where(
+                'tokenable_id',
+                $admin->currentAccessToken()->tokenable_id
+            )->delete();
+
+            return response()->json([
+                'message' => "You're Logout",
+            ]);
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation Error',
                 'errors' => $e->errors()
-            ], 422); 
+            ], 422);
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
