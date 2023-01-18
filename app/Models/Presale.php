@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Ramsey\Uuid\Uuid;
 
 class Presale extends Model
@@ -13,12 +13,13 @@ class Presale extends Model
 
     protected $fillable = [
         'presale_name',
-        'due_date',
+        'presale_start',
+        'presale_end',
+        'amount',
         'price',
-        'total_available'
     ];
 
-    protected $primaryKey = "uuid";
+    protected $primaryKey = 'uuid';
     public $incrementing = false;
     protected $keyType = 'string';
 

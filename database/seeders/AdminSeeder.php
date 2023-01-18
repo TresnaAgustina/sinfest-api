@@ -30,7 +30,7 @@ class AdminSeeder extends Seeder
                 'username' => 'sinbun_club',
                 'email' => 'sinbun@instiki.ac.id',
                 'password' => bcrypt('sinbun!!'),
-                'roles' => 'wibu',
+                'roles' => 'admin',
                 'created_at' => now(),
                 'updated_at' => now()
             ],

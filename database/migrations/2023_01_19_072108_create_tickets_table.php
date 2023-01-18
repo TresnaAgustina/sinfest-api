@@ -15,12 +15,14 @@ class CreateTicketsTable extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
-            $table->foreignUuid('order_id')
+            $table->string('ticket_name');
+            $table->string('ticket_code')->unique();
+            $table->foreignUuid('order_uuid')
                 ->references('uuid')
                 ->on('orders')
                 ->onDelete('cascade');
             $table->string('unique_code')->unique();
-            $table->boolean('isChekIn')->default(false);
+            $table->boolean('is_check_in')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
