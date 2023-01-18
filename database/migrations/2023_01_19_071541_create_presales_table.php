@@ -15,10 +15,11 @@ class CreatePresalesTable extends Migration
     {
         Schema::create('presales', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
-            $table->string('presale_name', 40);
-            $table->timestamp('due_date');
-            $table->integer('price')->default(0);
-            $table->integer('total_available')->default(0);
+            $table->string('presale_name');
+            $table->timestamp('presale_start');
+            $table->timestamp('presale_end');
+            $table->integer('amount')->default(0);
+            $table->double('price')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

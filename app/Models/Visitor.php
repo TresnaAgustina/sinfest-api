@@ -14,7 +14,6 @@ class Visitor extends Model
     protected $fillable = [
         'username',
         'email',
-        'password',
         'phone'
     ];
 
