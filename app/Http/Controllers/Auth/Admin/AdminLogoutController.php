@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth\Admin;
 
-use Exception;
 use App\Models\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -30,10 +29,10 @@ class AdminLogoutController extends Controller
             ]);
         } catch (ValidationException $e) {
             return response()->json([
-                'message' => 'Validation Error',
+                'message' => $e->getMessage(),
                 'errors' => $e->errors()
             ], 422);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
             ], 500);

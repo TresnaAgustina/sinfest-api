@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Auth\Admin;
+namespace App\Http\Controllers\Auth\Visitor;
 
-use App\Models\Admin;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\AdminResource;
+use App\Http\Resources\VisitorResource;
+use App\Models\Visitor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
-class AdminRegisterController extends Controller
+class VisitorRegisterController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -19,22 +20,20 @@ class AdminRegisterController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $validated = $this->validate(
-                $request,
-                [
-                    'username' => 'required|unique:admins|max:20',
-                    'email' => 'required|email|unique:admins',
-                    'password' => 'required|string|min:8|confirmed'
-                ]
-            );
+            $validated = $this->validate($request, [
+                'username' => 'required|unique:visitors|max:25',
+                'email' => 'required|email|unique:visitors',
+                'password' => 'required|string|min:8|confirmed',
+                'phone' => 'required|unique:visitors'
+            ]);
 
             $validated['password'] = bcrypt($request->password);
-            Admin::create($validated);
+            Visitor::create($validated);
 
-            $admin = Admin::where('username', $request->username)->first();
-            $token = $admin->createToken(env('APP_KEY'))->plainTextToken;
+            $visitor = Visitor::where('username', $request->username)->first();
+            $token = $visitor->createToken(env('APP_KEY'), ['*'])->plainTextToken;
 
-            return (new AdminResource($admin))->additional([
+            return (new VisitorResource($visitor))->additional([
                 'token_type' => 'Bearer',
                 'access_token' => $token,
             ]);
@@ -45,7 +44,7 @@ class AdminRegisterController extends Controller
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage(),
+                'message' => $e->getMessage()
             ], 500);
         }
     }

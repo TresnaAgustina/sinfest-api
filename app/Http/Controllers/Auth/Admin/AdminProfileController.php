@@ -27,7 +27,7 @@ class AdminProfileController extends Controller
                 'message' => 'Validation Error',
                 'errors' => $e->errors()
             ], 422);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
             ], 500);

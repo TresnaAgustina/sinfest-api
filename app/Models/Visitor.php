@@ -14,7 +14,8 @@ class Visitor extends Model
     protected $fillable = [
         'username',
         'email',
-        'phone'
+        'phone',
+        'password'
     ];
 
     protected $primaryKey = "uuid";
@@ -35,9 +36,5 @@ class Visitor extends Model
     protected $hidden = [
         'password',
         'remember_token',
-    ];
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
     ];
 }

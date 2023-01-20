@@ -9,6 +9,10 @@ use App\Http\Controllers\Auth\Admin\{
     AdminProfileController
 };
 
+use App\Http\Controllers\Auth\Visitor\{
+    VisitorRegisterController
+};
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +26,16 @@ use App\Http\Controllers\Auth\Admin\{
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    // Admin
-    Route::get('/admin-only/me', AdminProfileController::class);
-    Route::post('/admin-only/logout', AdminLogoutController::class);
+    Route::prefix('admin-only')->group(function () {
+        Route::get('/me', AdminProfileController::class);
+        Route::post('/logout', AdminLogoutController::class);
+    });
 });
 
-Route::post('/admin-only/register', AdminRegisterController::class);
-Route::post('/admin-only/login', AdminLoginController::class);
+Route::prefix('admin-only')->group(function () {
+    Route::post('/register', AdminRegisterController::class);
+    Route::post('/login', AdminLoginController::class);
+});
+
+// Visitor
+Route::post('/register', VisitorRegisterController::class);
