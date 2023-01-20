@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth\Visitor;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\VisitorResource;
 use App\Models\Visitor;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
