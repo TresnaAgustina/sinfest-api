@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\Admin\{
 };
 
 use App\Http\Controllers\Auth\Visitor\{
+    VisitorLoginController,
     VisitorRegisterController
 };
 
@@ -37,5 +38,9 @@ Route::prefix('admin-only')->group(function () {
     Route::post('/login', AdminLoginController::class);
 });
 
-// Visitor
-Route::post('/register', VisitorRegisterController::class);
+
+Route::prefix('visitor')->group(function () {
+    Route::post('/register', VisitorRegisterController::class);
+    Route::post('/login', VisitorLoginController::class);
+});
+
