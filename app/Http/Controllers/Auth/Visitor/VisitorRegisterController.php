@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Auth\Admin;
+namespace App\Http\Controllers\Auth\Visitor;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\AdminResource;
+use App\Http\Resources\VisitorResource;
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
-class AdminRegisterController extends Controller
+class VisitorRegisterController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -19,21 +19,19 @@ class AdminRegisterController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $validated = $this->validate(
-                $request,
-                [
-                    'username' => 'required|unique:users|max:20',
-                    'email' => 'required|email|unique:users',
-                    'password' => 'required|string|min:8|confirmed'
-                ]
-            );
+            $validated = $this->validate($request, [
+                'username' => 'required|unique:visitors|max:25',
+                'email' => 'required|email|unique:visitors',
+                'password' => 'required|string|min:8|confirmed',
+                'phone' => 'required|unique:visitors'
+            ]);
 
             $validated['password'] = bcrypt($request->password);
-            $admin = User::create($validated);
+            $visitor = Visitor::create($validated);
 
-            $token = $admin->createToken($request->username, ["*"])->plainTextToken;
+            $token = $visitor->createToken($request->username, ['visitors'])->plainTextToken;
 
-            return (new AdminResource($admin))->additional([
+            return (new VisitorResource($visitor))->additional([
                 'token_type' => 'Bearer',
                 'access_token' => $token,
             ]);
@@ -44,7 +42,7 @@ class AdminRegisterController extends Controller
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage(),
+                'message' => $e->getMessage()
             ], 500);
         }
     }

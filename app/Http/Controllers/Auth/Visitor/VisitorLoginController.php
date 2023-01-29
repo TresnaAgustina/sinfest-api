@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Auth\Admin;
+namespace App\Http\Controllers\Auth\Visitor;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\AdminResource;
+use App\Http\Resources\VisitorResource;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class AdminLoginController extends Controller
+class VisitorLoginController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -26,13 +24,13 @@ class AdminLoginController extends Controller
                 'password' => 'required'
             ]);
 
-            if (auth()->attempt($validated)) {
-                $admin = auth()->user();
+            if (Auth::guard('visitors')->attempt($validated)) {
+                $visitor = Auth::guard('visitors')->user();
 
-                $admin->tokens()->delete();
-                $token = $admin->createToken($request->username, ["*"])->plainTextToken;
+                $visitor->tokens()->delete();
+                $token = $visitor->createToken($request->username, ['visitors'])->plainTextToken;
 
-                return (new AdminResource($admin))->additional([
+                return (new VisitorResource($visitor))->additional([
                     'token_type' => 'Bearer',
                     'access_token' => $token,
                 ]);
@@ -48,7 +46,7 @@ class AdminLoginController extends Controller
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage(),
+                'message' => $e->getMessage()
             ], 500);
         }
     }

@@ -4,22 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Ramsey\Uuid\Uuid;
 
-class Visitor extends Model
+class Visitor extends Authenticatable
 {
     use HasFactory, HasApiTokens;
 
     protected $fillable = [
         'username',
         'email',
-        'phone'
+        'phone',
+        'password'
     ];
 
     protected $primaryKey = "uuid";
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $guard = 'visitors';
 
     protected static function boot()
     {
@@ -35,9 +38,5 @@ class Visitor extends Model
     protected $hidden = [
         'password',
         'remember_token',
-    ];
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
     ];
 }

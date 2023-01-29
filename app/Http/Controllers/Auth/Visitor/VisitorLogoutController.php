@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Auth\Admin;
+namespace App\Http\Controllers\Auth\Visitor;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
-class AdminLogoutController extends Controller
+class VisitorLogoutController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -17,10 +17,10 @@ class AdminLogoutController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $admin = $request->user();
-            $admin->tokens()->where(
+            $visitor = Auth::user();
+            $visitor->tokens()->where(
                 'tokenable_id',
-                $admin->currentAccessToken()->tokenable_id
+                $visitor->currentAccessToken()->tokenable_id
             )->delete();
 
             return response()->json([
@@ -28,7 +28,7 @@ class AdminLogoutController extends Controller
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage(),
+                'message' => $e->getMessage()
             ], 500);
         }
     }

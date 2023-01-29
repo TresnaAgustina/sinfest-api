@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AdminResource extends JsonResource
+class VisitorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,6 +18,7 @@ class AdminResource extends JsonResource
             'uuid' => $this->uuid,
             'username' => $this->username,
             'email' => $this->email,
+            'phone' => $this->phone
         ];
     }
 }

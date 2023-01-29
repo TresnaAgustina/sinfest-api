@@ -15,7 +15,7 @@ class CreateVisitorsTable extends Migration
     {
         Schema::create('visitors', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
-            $table->string('username')->unique();
+            $table->string('username', 25)->unique();
             $table->string('email')->unique();
             $table->string('password')->min(8);
             $table->string('phone')->unique();
