@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Auth\Admin;
 
-use Exception;
-use App\Models\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdminResource;
 use Illuminate\Http\Request;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth\Admin;
 
-use App\Models\Admin;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdminResource;
 use Illuminate\Http\Request;
@@ -22,16 +22,15 @@ class AdminRegisterController extends Controller
             $validated = $this->validate(
                 $request,
                 [
-                    'username' => 'required|unique:admins|max:20',
-                    'email' => 'required|email|unique:admins',
+                    'username' => 'required|unique:users|max:20',
+                    'email' => 'required|email|unique:users',
                     'password' => 'required|string|min:8|confirmed'
                 ]
             );
 
             $validated['password'] = bcrypt($request->password);
-            Admin::create($validated);
+            $admin = User::create($validated);
 
-            $admin = Admin::where('username', $request->username)->first();
             $token = $admin->createToken(env('APP_KEY'))->plainTextToken;
 
             return (new AdminResource($admin))->additional([

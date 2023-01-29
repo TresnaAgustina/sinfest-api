@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Auth\Admin;
 
-use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdminResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -20,29 +21,24 @@ class AdminLoginController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $this->validate($request, [
+            $validated = $request->validate([
                 'username' => 'required',
                 'password' => 'required'
             ]);
 
-            $admin = Admin::where('username', $request->username)->first();
+            if (auth()->attempt($validated)) {
+                $admin = auth()->user();
+                $token = $admin->createToken(env('APP_KEY'))->plainTextToken;
 
-            if (!$admin || !Hash::check(
-                $request->password,
-                $admin->password
-            )) {
-                throw ValidationException::withMessages([
-                    'message' => ["The credentials are incorrect"]
+                return (new AdminResource($admin))->additional([
+                    'token_type' => 'Bearer',
+                    'access_token' => $token,
                 ]);
             }
 
-            $admin->tokens()->delete();
-            $token = $admin->createToken(env('APP_KEY'))->plainTextToken;
-
-            return (new AdminResource($admin))->additional([
-                'token_type' => 'Bearer',
-                'access_token' => $token,
-            ]);
+            return response()->json([
+                'message' => 'Your Credentials are incorrect.'
+            ], 401);
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
