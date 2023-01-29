@@ -18,7 +18,6 @@ class AdminResource extends JsonResource
             'uuid' => $this->uuid,
             'username' => $this->username,
             'email' => $this->email,
-            'roles' => $this->roles
         ];
     }
 }

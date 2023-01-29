@@ -28,7 +28,9 @@ class AdminLoginController extends Controller
 
             if (auth()->attempt($validated)) {
                 $admin = auth()->user();
-                $token = $admin->createToken(env('APP_KEY'))->plainTextToken;
+
+                $admin->tokens()->delete();
+                $token = $admin->createToken($request->username, ["*"])->plainTextToken;
 
                 return (new AdminResource($admin))->additional([
                     'token_type' => 'Bearer',

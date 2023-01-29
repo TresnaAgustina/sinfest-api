@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Auth\Admin;
+namespace App\Http\Controllers\Auth\Visitor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\VisitorResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class AdminLogoutController extends Controller
+class VisitorProfileController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -17,18 +19,11 @@ class AdminLogoutController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $admin = $request->user();
-            $admin->tokens()->where(
-                'tokenable_id',
-                $admin->currentAccessToken()->tokenable_id
-            )->delete();
-
-            return response()->json([
-                'message' => "You're Logout",
-            ], 200);
+            $visitor = Auth::user();
+            return (new VisitorResource($visitor));
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage(),
+                'message' => $e->getMessage()
             ], 500);
         }
     }

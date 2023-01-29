@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Auth\Visitor;
 
-use App\Models\Visitor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\VisitorResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class VisitorLoginController extends Controller
@@ -20,29 +19,26 @@ class VisitorLoginController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $this->validate($request, [
-                'email' => 'required',
-                'password' => 'required',
+            $validated = $request->validate([
+                'username' => 'required',
+                'password' => 'required'
             ]);
 
-            $visitor = Visitor::where('email', $request->email)->first();
+            if (Auth::guard('visitors')->attempt($validated)) {
+                $visitor = Auth::guard('visitors')->user();
 
-            if (!$visitor || !Hash::check(
-                $request->password,
-                $visitor->password
-            )) {
-                throw ValidationException::withMessages([
-                    'message' => ["The credentials are incorrect"]
+                $visitor->tokens()->delete();
+                $token = $visitor->createToken($request->username, ['visitors'])->plainTextToken;
+
+                return (new VisitorResource($visitor))->additional([
+                    'token_type' => 'Bearer',
+                    'access_token' => $token,
                 ]);
             }
 
-            $visitor->tokens()->delete();
-            $token = $visitor->createToken(env('APP_KEY'), ['*'])->plainTextToken;
-
-            return (new VisitorResource($visitor))->additional([
-                'token_type' => 'Bearer',
-                'access_token' => $token,
-            ]);
+            return response()->json([
+                'message' => 'Your Credentials are incorrect.'
+            ], 401);
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => $e->getMessage(),

@@ -27,10 +27,9 @@ class VisitorRegisterController extends Controller
             ]);
 
             $validated['password'] = bcrypt($request->password);
-            Visitor::create($validated);
+            $visitor = Visitor::create($validated);
 
-            $visitor = Visitor::where('username', $request->username)->first();
-            $token = $visitor->createToken(env('APP_KEY'), ['*'])->plainTextToken;
+            $token = $visitor->createToken($request->username, ['visitors'])->plainTextToken;
 
             return (new VisitorResource($visitor))->additional([
                 'token_type' => 'Bearer',

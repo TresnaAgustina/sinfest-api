@@ -20,11 +20,6 @@ class AdminProfileController extends Controller
         try {
             $admin = $request->user();
             return new AdminResource($admin);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),

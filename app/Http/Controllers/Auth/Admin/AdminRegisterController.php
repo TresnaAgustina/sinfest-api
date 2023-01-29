@@ -31,7 +31,7 @@ class AdminRegisterController extends Controller
             $validated['password'] = bcrypt($request->password);
             $admin = User::create($validated);
 
-            $token = $admin->createToken(env('APP_KEY'))->plainTextToken;
+            $token = $admin->createToken($request->username, ["*"])->plainTextToken;
 
             return (new AdminResource($admin))->additional([
                 'token_type' => 'Bearer',

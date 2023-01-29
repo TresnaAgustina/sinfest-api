@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Auth\Admin\{
     AdminLoginController,
     AdminLogoutController,
@@ -11,20 +12,11 @@ use App\Http\Controllers\Auth\Admin\{
 
 use App\Http\Controllers\Auth\Visitor\{
     VisitorLoginController,
+    VisitorLogoutController,
+    VisitorProfileController,
     VisitorRegisterController
 };
 
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('admin-only')->group(function () {
@@ -38,9 +30,14 @@ Route::prefix('admin-only')->group(function () {
     Route::post('/login', AdminLoginController::class);
 });
 
+Route::middleware('auth:sanctum', 'ability:visitors')->group(function () {
+    Route::prefix('visitor')->group(function () {
+        Route::get('/me', VisitorProfileController::class);
+        Route::post('/logout', VisitorLogoutController::class);
+    });
+});
 
 Route::prefix('visitor')->group(function () {
     Route::post('/register', VisitorRegisterController::class);
     Route::post('/login', VisitorLoginController::class);
 });
-

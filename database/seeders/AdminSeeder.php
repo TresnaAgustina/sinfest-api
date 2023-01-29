@@ -35,7 +35,7 @@ class AdminSeeder extends Seeder
                 'updated_at' => now()
             ],
         ])->each(function ($admin) {
-            DB::table('admins')->insert($admin);
+            DB::table('users')->insert($admin);
         });
     }
 }
